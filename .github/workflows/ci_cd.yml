@@ -12,8 +12,7 @@ on:
 
 jobs:
   build:
-    environment:
-      name: dev
+    environment: dev
     runs-on: ubuntu-latest
 
     steps:
