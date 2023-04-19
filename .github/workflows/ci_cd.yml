@@ -12,6 +12,8 @@ on:
 
 jobs:
   build:
+    environment:
+      name: dev
     runs-on: ubuntu-latest
 
     steps:
@@ -29,3 +31,21 @@ jobs:
       with:
           name: front-end-app
           path: ./dist
+       
+       
+# Deploy on dev
+  deployment:
+    environment: dev
+    runs-on: ubuntu-latest
+     
+    steps:
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v2
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: us-east-1
+
+        - name: Copy files to the test website with the AWS CLI
+          run: |
+            aws s3 sync . s3://viseopipeline-shd
