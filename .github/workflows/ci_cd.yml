@@ -46,8 +46,9 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: us-east-1
 
-        - name: list itelms
-          run: ls
+        - name: list items
+          run: | 
+            ls
             
         - name: Copy files to the test website with the AWS CLI
           run:  |
