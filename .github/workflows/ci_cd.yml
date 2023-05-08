@@ -16,20 +16,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js 18.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18.x
-        cache: 'npm'
-    - run: npm i
-    - run: npm run build --if-present
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: 'npm'
+      - run: npm i
+      - run: npm run build --if-present
 
-# Uploads the artefact in path     
-    - uses: actions/upload-artifact@v3
-      with:
-          name: front-end-app
-          path: ./dist
+# Uploads the artefact in path 
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+            name: front-end-app
+            path: ./dist
        
        
 # Deploy on dev
@@ -39,20 +40,20 @@ jobs:
     needs: build
      
     steps:
-        - name: Configure AWS Credentials
-          uses: aws-actions/configure-aws-credentials@v2
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: us-east-1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
-        - name: Download artefact
-          uses: actions/download-artifact@v2.1.1
-          with:
-            name: front-end-app
-            path: ./dist
+      - name: Download artefact
+        uses: actions/download-artifact@v2.1.1
+        with:
+          name: front-end-app
+          path: ./dist
             
-        - name: Copy files to the test website with the AWS CLI
-          run:  |
-            aws s3 sync /home/runner/work/demo-github-actions/demo-github-actions/dist/angular-hello-world/ s3://streetdico-front 
+      - name: Copy files to the test website with the AWS CLI
+        run:  |
+          aws s3 sync /home/runner/work/demo-github-actions/demo-github-actions/dist/angular-hello-world/ s3://streetdico-front 
           
